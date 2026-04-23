@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El meu perfil professional | SMX → Ciberseguretat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f; --bg2: #111118; --bg3: #16161f;
+    --accent: #00e5c3; --accent2: #7b5ea7; --accent3: #ff6b4a;
+    --text: #f0ede8; --text2: #9b98a0; --text3: #5c5a62;
+    --border: rgba(255,255,255,0.07); --border2: rgba(0,229,195,0.2);
+    --card: rgba(255,255,255,0.03); --radius: 16px; --radius-sm: 8px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; cursor: none; }
+  .cursor { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s; }
+  .cursor-ring { width: 32px; height: 32px; border: 1px solid rgba(0,229,195,0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: transform 0.15s ease, width 0.3s, height 0.3s, border-color 0.3s; }
+  .cursor.hover { width: 14px; height: 14px; background: var(--accent3); }
+  .cursor-ring.hover { width: 48px; height: 48px; border-color: rgba(255,107,74,0.5); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem 4rem; display: flex; align-items: center; justify-content: space-between; background: rgba(10,10,15,0.7); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
+  nav.scrolled { padding: 1rem 4rem; }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-size: 0.85rem; font-weight: 400; letter-spacing: 0.05em; color: var(--text2); text-decoration: none; text-transform: uppercase; transition: color 0.2s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.3s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta { font-size: 0.82rem; font-weight: 500; padding: 0.5rem 1.25rem; border: 1px solid var(--border2); border-radius: 40px; color: var(--accent); text-decoration: none; transition: background 0.2s, color 0.2s; }
+  .nav-cta:hover { background: var(--accent); color: var(--bg); }
+  #hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 4rem 4rem; position: relative; overflow: hidden; }
+  .hero-grid { position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(rgba(0,229,195,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,195,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); }
+  .hero-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,195,0.08) 0%, transparent 70%); top: -100px; left: -100px; pointer-events: none; }
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 2rem; padding: 0.4rem 1rem; border: 1px solid var(--border2); border-radius: 40px; animation: fadeUp 0.8s ease both; }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }
+  h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 7vw, 6rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.04em; animation: fadeUp 0.8s 0.1s ease both; }
+  h1 .accent { color: var(--accent); } h1 .accent2 { color: var(--accent3); }
+  .hero-sub { font-size: 1.15rem; font-weight: 300; line-height: 1.7; color: var(--text2); max-width: 560px; margin: 1.5rem 0 2.5rem; animation: fadeUp 0.8s 0.2s ease both; }
+  .hero-actions { display: flex; gap: 1rem; align-items: center; animation: fadeUp 0.8s 0.3s ease both; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 2rem; border-radius: 40px; background: var(--accent); color: var(--bg); font-weight: 600; font-size: 0.9rem; text-decoration: none; border: none; transition: transform 0.2s, box-shadow 0.2s; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,229,195,0.3); }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 2rem; border-radius: 40px; border: 1px solid var(--border); color: var(--text2); font-size: 0.9rem; text-decoration: none; transition: border-color 0.2s, color 0.2s; }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; animation: fadeUp 0.8s 0.4s ease both; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--text); letter-spacing: -0.03em; }
+  .stat-num span { color: var(--accent); }
+  .stat-label { font-size: 0.78rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--text3); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; animation: fadeIn 1s 1s ease both; }
+  .scroll-line { width: 1px; height: 48px; background: linear-gradient(to bottom, transparent, var(--accent)); animation: scrollLine 1.8s ease infinite; }
+  @keyframes scrollLine { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  section { padding: 6rem 4rem; }
+  .section-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+  .section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+  h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1rem; }
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .enunciat { background: rgba(123,94,167,0.06); border: 1px solid rgba(123,94,167,0.2); border-radius: var(--radius-sm); padding: 1.25rem 1.5rem; margin-bottom: 2.5rem; font-size: 0.88rem; color: var(--text2); line-height: 1.7; font-style: italic; }
+  .enunciat strong { color: #b39ddb; font-style: normal; font-weight: 500; }
+  #autoconocimiento { background: var(--bg2); }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 3rem; }
+  .skill-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; transition: border-color 0.3s, transform 0.3s, background 0.3s; cursor: default; }
+  .skill-card:hover { border-color: var(--border2); background: rgba(0,229,195,0.04); transform: translateY(-3px); }
+  .skill-name { font-size: 0.85rem; font-weight: 500; color: var(--text2); margin-bottom: 0.75rem; }
+  .skill-bar-track { height: 3px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
+  .skill-bar-fill { height: 100%; border-radius: 10px; background: var(--accent); width: 0; transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+  .skill-bar-fill.low { background: var(--accent2); }
+  .skill-score { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text); float: right; margin-top: -0.1rem; }
+  .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+  .strengths-list, .improve-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .strengths-list li, .improve-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.95rem; color: var(--text2); line-height: 1.5; }
+  .strengths-list li::before { content: '↗'; color: var(--accent); font-size: 0.8rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .improve-list li::before { content: '◎'; color: var(--accent3); font-size: 0.8rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .box-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; }
+  .feedback-block { background: rgba(0,229,195,0.04); border: 1px solid var(--border2); border-radius: var(--radius-sm); padding: 1.5rem; margin-top: 2.5rem; }
+  .feedback-block h3 { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--accent); margin-bottom: 0.75rem; }
+  .feedback-block p { font-size: 0.88rem; color: var(--text2); line-height: 1.65; }
+  #formacio { background: var(--bg); }
+  .path-container { position: relative; margin-top: 3rem; }
+  .path-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 1px; background: var(--border); }
+  .path-line::after { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 0; background: linear-gradient(to bottom, var(--accent), var(--accent2)); transition: height 1.5s ease; }
+  .path-line.filled::after { height: 100%; }
+  .path-items { display: flex; flex-direction: column; gap: 0; }
+  .path-item { display: flex; gap: 2.5rem; align-items: flex-start; padding-bottom: 2.5rem; position: relative; }
+  .path-dot { width: 41px; height: 41px; border-radius: 50%; flex-shrink: 0; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: border-color 0.3s; position: relative; z-index: 1; }
+  .path-item.active .path-dot { border-color: var(--accent); color: var(--accent); }
+  .path-item.future .path-dot { border-color: var(--border); color: var(--text3); }
+  .path-item.highlight .path-dot { border-color: var(--accent3); color: var(--accent3); }
+  .path-content { flex: 1; padding-top: 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 2.5rem; }
+  .path-item:last-child .path-content { border-bottom: none; }
+  .path-tag { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 40px; background: rgba(0,229,195,0.08); color: var(--accent); display: inline-block; margin-bottom: 0.5rem; }
+  .path-tag.future-tag { background: rgba(255,107,74,0.08); color: var(--accent3); }
+  .path-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+  .path-desc { font-size: 0.9rem; color: var(--text2); line-height: 1.6; }
+  .path-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .chip { font-size: 0.72rem; padding: 0.25rem 0.7rem; background: var(--card); border: 1px solid var(--border); border-radius: 40px; color: var(--text3); }
+  #objetivo { background: var(--bg2); }
+  .objetivo-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+  .big-quote { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 2.5vw, 1.8rem); font-weight: 700; line-height: 1.35; color: var(--text); letter-spacing: -0.02em; }
+  .big-quote em { color: var(--accent); font-style: normal; }
+  .objetivo-cards { display: flex; flex-direction: column; gap: 1rem; }
+  .objetivo-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; transition: border-color 0.3s; }
+  .objetivo-card:hover { border-color: var(--border2); }
+  .objetivo-card-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); margin-bottom: 0.5rem; }
+  .objetivo-card-items { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+  .objetivo-tag { font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 40px; }
+  .tag-tech { background: rgba(0,229,195,0.08); color: var(--accent); }
+  .tag-soft { background: rgba(123,94,167,0.1); color: #b39ddb; }
+  .tag-act { background: rgba(255,107,74,0.08); color: var(--accent3); }
+  #salides { background: var(--bg); }
+  .jobs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 3rem; }
+  .job-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: transform 0.3s, border-color 0.3s, background 0.3s; position: relative; overflow: hidden; }
+  .job-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+  .job-card:hover::before { transform: scaleX(1); }
+  .job-card:hover { transform: translateY(-4px); border-color: var(--border2); background: rgba(0,229,195,0.03); }
+  .job-card.featured { border-color: rgba(0,229,195,0.25); }
+  .job-card.featured::before { background: linear-gradient(to right, var(--accent), var(--accent2)); }
+  .job-badge { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 40px; background: rgba(0,229,195,0.1); color: var(--accent); display: inline-block; margin-bottom: 1rem; }
+  .job-badge.future-badge { background: rgba(255,107,74,0.1); color: var(--accent3); }
+  .job-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--text); margin-bottom: 0.5rem; }
+  .job-desc { font-size: 0.85rem; color: var(--text2); line-height: 1.55; }
+  .job-arrow { position: absolute; bottom: 1.25rem; right: 1.25rem; color: var(--text3); font-size: 1rem; transition: transform 0.2s, color 0.2s; }
+  .job-card:hover .job-arrow { transform: translate(3px,-3px); color: var(--accent); }
+  #pla { background: var(--bg2); }
+  .timeline { display: flex; gap: 0; margin-top: 3rem; position: relative; }
+  .timeline::before { content: ''; position: absolute; top: 32px; left: 32px; right: 32px; height: 1px; background: var(--border); }
+  .tl-item { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 0.75rem; position: relative; }
+  .tl-dot { width: 64px; height: 64px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--text3); margin-bottom: 1.25rem; position: relative; z-index: 1; transition: border-color 0.3s, color 0.3s; }
+  .tl-item.active .tl-dot { border-color: var(--accent); color: var(--accent); background: rgba(0,229,195,0.06); }
+  .tl-item.near .tl-dot { border-color: var(--accent2); color: #b39ddb; background: rgba(123,94,167,0.06); }
+  .tl-item.far .tl-dot { border-color: var(--accent3); color: var(--accent3); background: rgba(255,107,74,0.06); }
+  .tl-label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin-bottom: 0.4rem; }
+  .tl-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.88rem; color: var(--text); line-height: 1.3; }
+  .tl-sub { font-size: 0.78rem; color: var(--text3); margin-top: 0.35rem; line-height: 1.4; }
+  #motivacio { background: var(--bg); text-align: center; }
+  .motivacio-inner { max-width: 700px; margin: 0 auto; }
+  .big-statement { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700; line-height: 1.4; letter-spacing: -0.03em; color: var(--text); margin: 2rem 0; }
+  .big-statement em { color: var(--accent); font-style: normal; }
+  .motivacio-sub { font-size: 1rem; color: var(--text2); line-height: 1.7; }
+  footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 3rem 4rem; display: flex; align-items: center; justify-content: space-between; }
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--text2); letter-spacing: -0.02em; }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy { font-size: 0.78rem; color: var(--text3); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.78rem; color: var(--text3); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 1000; pointer-events: none; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; } .nav-links, .nav-cta { display: none; }
+    section, #hero, footer { padding: 4rem 1.5rem; }
+    .two-cols, .objetivo-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .timeline { flex-direction: column; gap: 1.5rem; } .timeline::before { display: none; }
+    .hero-stats { gap: 2rem; } footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">SMX<span>.</span>portfolio</a>
+  <ul class="nav-links">
+    <li><a href="#autoconocimiento">Perfil</a></li>
+    <li><a href="#formacio">Formació</a></li>
+    <li><a href="#objetivo">Objectiu</a></li>
+    <li><a href="#salides">Sortides</a></li>
+    <li><a href="#pla">Pla</a></li>
+  </ul>
+  <a href="#motivacio" class="nav-cta">La meva missió</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Perfil professional · Cicle SMX</div>
+    <h1>Sistemes,<br>xarxes <span class="accent2">&</span><br><span class="accent">seguretat</span></h1>
+    <p class="hero-sub">Un perfil sòlid, organitzat i orientat cap al futur digital. De Sistemes Microinformàtics i Xarxes cap a la ciberseguretat i els sistemes crítics.</p>
+    <div class="hero-actions">
+      <a href="#autoconocimiento" class="btn-primary">Veure el meu perfil ↓</a>
+      <a href="#pla" class="btn-ghost">Pla a 5 anys →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">18<span>/18</span></div><div class="stat-label">Competències avaluades</div></div>
+      <div class="stat-item"><div class="stat-num">14<span>+</span></div><div class="stat-label">Competències al nivell 3</div></div>
+      <div class="stat-item"><div class="stat-num">1<span>r</span></div><div class="stat-label">Pas cap a l'ASIR</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div>Scroll</div>
+</section>
+
+<section id="autoconocimiento">
+  <div class="section-label">Tasques 6, 7 i 8 — Autoconeixement</div>
+  <h2 class="reveal">El meu perfil<br>de competències</h2>
+
+  <div class="enunciat reveal">
+    <strong>Tasca 6.</strong> He analitzat el meu nivell personal en cada competència a través de les dianes d'avaluació, valorant amb sinceritat del 0 al 3. He pensat en moments importants de la meva vida —personal, acadèmica i laboral— on he demostrat cadascuna d'aquestes competències. A més, he ensenyat les meves dianes a amics i família per saber com em veuen ells, i he tingut en compte el seu feedback per ajustar la meva autovaloració on feia falta.
+    <br><br>
+    <strong>Tasca 7.</strong> La taula de baix compara la importància de cada competència en el sector de la informàtica amb el meu grau d'adquisició personal. Les barres verdes volen dir que estic alineat amb el que demana el sector; les liles indiquen que haig de millorar.
+  </div>
+
+  <div class="skills-grid" id="skillsGrid"></div>
+
+  <div class="feedback-block reveal">
+    <h3>Com em veuen els altres? — Tasca 6</h3>
+    <p>He preguntat a amics i família si creia que m'havia avaluat correctament. En general, han confirmat el que jo ja pensava: que soc una persona constant, responsable i que escolta molt bé. Alguns m'han dit que de vegades em costa més defensar la meva opinió quan no estic d'acord amb algú, i que podria ser una mica més crític amb les coses que em plantegen. Gràcies a aquest feedback he mantingut les puntuacions d'asertivitat i sentit crític amb un 2, perquè crec que és honest i m'ajudarà a treballar-ho.</p>
+  </div>
+
+  <div style="margin-top:3rem;">
+    <div class="section-label" style="margin-bottom:1rem;">Tasca 8 — Conclusions</div>
+    <div class="two-cols">
+      <div class="reveal">
+        <div class="box-title">↗ Els meus punts forts</div>
+        <ul class="strengths-list">
+          <li>Soc molt disciplinat i responsable, i això es nota en tot el que faig</li>
+          <li>M'organitzo bé i planifico les coses abans de fer-les</li>
+          <li>Comunico bé i sé escoltar, una cosa que no tothom té</li>
+          <li>Analitzo les situacions abans d'actuar — molt útil en informàtica</li>
+          <li>Tinc iniciativa i lideratge, però sense ser impulsiu</li>
+          <li>Treballo bé en equip i empatitzo amb les persones del meu voltant</li>
+        </ul>
+      </div>
+      <div class="reveal">
+        <div class="box-title">◎ El que haig de treballar</div>
+        <ul class="improve-list">
+          <li>L'asertivitat — aprendre a dir el que penso sense evitar el conflicte</li>
+          <li>La resolució de conflictes quan la situació és de pressió</li>
+          <li>El sentit crític — qüestionar més les coses en comptes d'acceptar-ho tot</li>
+        </ul>
+        <div style="margin-top:1.5rem;padding:1rem;background:rgba(0,229,195,0.04);border:1px solid var(--border2);border-radius:8px;">
+          <p style="font-size:0.88rem;color:var(--text2);line-height:1.65;">Totes les competències es poden aprendre i millorar. No és una debilitat tenir-ne — és una oportunitat de créixer. Amb petits canvis en aquestes àrees, el meu perfil passa de bo a <strong style="color:var(--accent)">molt competitiu</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="formacio">
+  <div class="section-label">Tasca 9 — Itinerari formatiu</div>
+  <h2 class="reveal">La meva ruta<br>de formació</h2>
+
+  <div class="enunciat reveal">
+    <strong>Tasca 9.</strong> Quan acabi el cicle que estic estudiant puc accedir al món laboral o continuar estudiant. He investigat les opcions formatives que se m'obren i he triat la que millor encaixa amb el meu perfil i els meus objectius. A continuació trobaràs les quatre opcions principals, els criteris de selecció a Catalunya i l'opció que he escollit amb la seva justificació.
+  </div>
+
+  <div class="path-container reveal">
+    <div class="path-line" id="pathLine"></div>
+    <div class="path-items">
+
+      <div class="path-item active">
+        <div class="path-dot">◉</div>
+        <div class="path-content">
+          <span class="path-tag">Ara mateix</span>
+          <div class="path-title">Sistemes Microinformàtics i Xarxes — SMX (Grau Mitjà)</div>
+          <div class="path-desc">El cicle que estic fent ara. Aprenc a instal·lar i configurar sistemes, muntar xarxes, fer manteniment d'equips i donar suport tècnic als usuaris. És un bon punt de partida i el meu perfil personal encaixa molt bé amb el que es demana.</div>
+          <div class="path-chips"><span class="chip">Xarxes</span><span class="chip">Sistemes operatius</span><span class="chip">Suport tècnic</span><span class="chip">Hardware</span></div>
+        </div>
+      </div>
+
+      <div class="path-item future">
+        <div class="path-dot">○</div>
+        <div class="path-content">
+          <span class="path-tag future-tag">Opció 1 — Batxillerat</span>
+          <div class="path-title">Batxillerat Tecnològic</div>
+          <div class="path-desc">Podria fer el Batxillerat Tecnològic si volgués accedir a la universitat i estudiar Enginyeria Informàtica o Telecomunicacions. És un camí possible, però és més llarg i amb més càrrega acadèmica. Ara mateix no és la meva primera opció.</div>
+        </div>
+      </div>
+
+      <div class="path-item highlight">
+        <div class="path-dot">★</div>
+        <div class="path-content">
+          <span class="path-tag future-tag">⭐ Opció escollida — Grau Superior</span>
+          <div class="path-title">ASIR — Administració de Sistemes Informàtics en Xarxa</div>
+          <div class="path-desc">Aquesta és la meva opció principal. L'ASIR encaixa perfectament amb la meva forma de ser: organització, xarxes, servidors i responsabilitat. És la porta natural cap a la ciberseguretat i els sistemes crítics.
+          <br><br><strong style="color:var(--text);">Per què l'escolleixo:</strong> Perquè combina el que m'agrada (sistemes, xarxes, tecnologia) amb les meves competències (organització, anàlisi, responsabilitat) i m'obre les millors sortides laborals del sector. A més, m'hi puc especialitzar en ciberseguretat just després.</div>
+          <div class="path-chips"><span class="chip">Servidors</span><span class="chip">Linux / Windows Server</span><span class="chip">Seguretat perimetral</span><span class="chip">Cloud</span></div>
+        </div>
+      </div>
+
+      <div class="path-item future">
+        <div class="path-dot">○</div>
+        <div class="path-content">
+          <span class="path-tag future-tag">Opció 2 — Grau Superior alternatiu</span>
+          <div class="path-title">DAW / DAM — Desenvolupament d'Aplicacions</div>
+          <div class="path-desc">Una altra opció de grau superior, orientada a la programació i al desenvolupament de software. Té bona sortida laboral, però s'allunya una mica del que m'agrada de debò: sistemes, xarxes i seguretat.</div>
+          <div class="path-chips"><span class="chip">Programació</span><span class="chip">Web</span><span class="chip">Apps mòbils</span></div>
+        </div>
+      </div>
+
+      <div class="path-item future">
+        <div class="path-dot">○</div>
+        <div class="path-content">
+          <span class="path-tag future-tag">Opció 3 — Complement</span>
+          <div class="path-title">Altre Grau Mitjà complementari</div>
+          <div class="path-desc">Podria fer un cicle d'Instal·lacions de Telecomunicació o Electrònica per ampliar la base tècnica. Però prefereixo anar directament al Grau Superior i aprofitar el temps millor.</div>
+          <div class="path-chips"><span class="chip">Telecomunicacions</span><span class="chip">Electrònica</span></div>
+        </div>
+      </div>
+
+      <div class="path-item future">
+        <div class="path-dot">○</div>
+        <div class="path-content">
+          <span class="path-tag future-tag">Opció 4 — Especialització</span>
+          <div class="path-title">Curs d'Especialització en Ciberseguretat</div>
+          <div class="path-desc">Després de l'ASIR, vull fer el Curs d'Especialització en Ciberseguretat en Entorns de les TIC. Els requisits d'accés principals són tenir el Títol de Tècnic Superior en ASIR, DAW, DAM o equivalent. És la guinda del pastís del meu pla formatiu.</div>
+          <div class="path-chips"><span class="chip">Ethical hacking</span><span class="chip">Pentesting</span><span class="chip">SOC</span><span class="chip">Forense digital</span></div>
+        </div>
+      </div>
+
+      <div class="path-item future">
+        <div class="path-dot">◇</div>
+        <div class="path-content">
+          <span class="path-tag" style="background:rgba(123,94,167,0.1);color:#b39ddb;">Criteris de selecció — Catalunya</span>
+          <div class="path-title">Què passa si hi ha més demanda que places?</div>
+          <div class="path-desc">Si hi ha més alumnes que volen accedir a un cicle que places disponibles, a Catalunya s'apliquen aquests criteris per ordre: nota mitjana del cicle formatiu, prioritat segons els estudis previs cursats, i en cas d'empat, sorteig. Per això convé mantenir un bon expedient acadèmic des d'ara.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="objetivo">
+  <div class="section-label">Tasques 14 i 15 — Motivacions i objectiu</div>
+  <h2 class="reveal">El meu objectiu<br>professional</h2>
+
+  <div class="enunciat reveal">
+    <strong>Tasca 14 — Coneix les teves motivacions.</strong> M'he preguntat: quin tipus de professional vull ser? Com em veig d'aquí a deu anys? Encaixa amb la meva forma de ser? Quin esforç em comprometo a fer?
+    <br><br>
+    <strong>Tasca 15 — Enuncia i planifica el teu objectiu professional.</strong> Un cop redactat l'objectiu, reflexiono sobre les àrees on he de millorar i com puc fer-ho concretament.
+  </div>
+
+  <div class="objetivo-layout">
+    <div class="reveal">
+      <p class="big-quote">Vull treballar en el sector de la informàtica, especialment en <em>sistemes o ciberseguretat</em>, i arribar a tenir un paper amb <em>responsabilitat real</em>, on tecnologia i justícia vagin de la mà.</p>
+      <p style="color:var(--text2);font-size:0.9rem;line-height:1.7;margin-top:1.5rem;">D'aquí a deu anys em veig com un professional sènior en ciberseguretat o sistemes crítics — potser com a analista, perit informàtic o dins d'alguna unitat especialitzada. Crec que encaixa molt bé amb la meva forma de ser: metòdic, responsable i que pensa les coses abans de fer-les.</p>
+      <p style="color:var(--text2);font-size:0.9rem;line-height:1.7;margin-top:1rem;">L'esforç que em comprometo a fer: acabar SMX amb bones notes, accedir a l'ASIR, fer les pràctiques en una empresa real, i especialitzar-me en ciberseguretat amb cursos i certificacions reconegudes.</p>
+    </div>
+    <div class="objetivo-cards reveal">
+      <div class="objetivo-card">
+        <div class="objetivo-card-label">1. Competències professionals que he de millorar (saber fer)</div>
+        <div class="objetivo-card-items">
+          <span class="objetivo-tag tag-tech">Ciberseguretat</span>
+          <span class="objetivo-tag tag-tech">Programació</span>
+          <span class="objetivo-tag tag-tech">Cloud / Xarxes</span>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.4rem;margin-top:0.75rem;">
+          <li style="font-size:0.82rem;color:var(--text2);">→ Fer cursos de ciberseguretat i certificacions com CompTIA o CEH</li>
+          <li style="font-size:0.82rem;color:var(--text2);">→ Practicar programació en projectes reals i de la vida diària</li>
+        </ul>
+      </div>
+      <div class="objetivo-card">
+        <div class="objetivo-card-label">2. Competències personals que he de millorar (saber ser)</div>
+        <div class="objetivo-card-items">
+          <span class="objetivo-tag tag-soft">Asertivitat</span>
+          <span class="objetivo-tag tag-soft">Resolució de conflictes</span>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.4rem;margin-top:0.75rem;">
+          <li style="font-size:0.82rem;color:var(--text2);">→ Participar més activament en dinàmiques de grup i debatre idees</li>
+          <li style="font-size:0.82rem;color:var(--text2);">→ Aprendre a defensar la meva opinió sense evitar el conflicte</li>
+        </ul>
+      </div>
+      <div class="objetivo-card">
+        <div class="objetivo-card-label">3. Actituds que necessito per a la meva professió (saber estar)</div>
+        <div class="objetivo-card-items">
+          <span class="objetivo-tag tag-act">Responsabilitat</span>
+          <span class="objetivo-tag tag-act">Professionalitat</span>
+          <span class="objetivo-tag tag-act">Ètica digital</span>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.4rem;margin-top:0.75rem;">
+          <li style="font-size:0.82rem;color:var(--text2);">→ Prendre decisions i assumir-ne les conseqüències sense por</li>
+          <li style="font-size:0.82rem;color:var(--text2);">→ Actuar sempre amb honestedat i respecte en l'àmbit digital</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="salides">
+  <div class="section-label">Tasca 10 — Sortides professionals</div>
+  <h2 class="reveal">On puc<br>arribar?</h2>
+
+  <div class="enunciat reveal">
+    <strong>Tasca 10.</strong> He investigat els llocs de treball del meu sector professional, tant del sector privat com del públic. He consultat els perfils professionals del Ministeri d'Educació i el Departament d'Educació de Catalunya. Aquí tens tots els llocs de treball als quals puc accedir amb el meu títol de SMX, i els que s'obren quan faci el Grau Superior i l'especialització.
+  </div>
+
+  <div class="jobs-grid">
+    <div class="job-card reveal">
+      <span class="job-badge">SMX — Ara</span>
+      <div class="job-title">Tècnic informàtic</div>
+      <div class="job-desc">Instal·lació, configuració i manteniment d'equips informàtics i perifèrics en empreses o per a particulars.</div>
+      <span class="job-arrow">↗</span>
+    </div>
+    <div class="job-card reveal">
+      <span class="job-badge">SMX — Ara</span>
+      <div class="job-title">Suport tècnic / Helpdesk</div>
+      <div class="job-desc">Atenció i resolució d'incidències tecnològiques per a usuaris i empreses. Sol ser el primer nivell de suport en organitzacions grans.</div>
+      <span class="job-arrow">↗</span>
+    </div>
+    <div class="job-card reveal">
+      <span class="job-badge">SMX — Ara</span>
+      <div class="job-title">Instal·lador de xarxes</div>
+      <div class="job-desc">Disseny i instal·lació d'infraestructures de xarxa en edificis, oficines i entorns industrials o comercials.</div>
+      <span class="job-arrow">↗</span>
+    </div>
+    <div class="job-card reveal">
+      <span class="job-badge">SMX — Ara</span>
+      <div class="job-title">Manteniment de sistemes</div>
+      <div class="job-desc">Gestió preventiva i correctiva de sistemes informàtics a empreses, garantint que tot funcioni sense interrupcions.</div>
+      <span class="job-arrow">↗</span>
+    </div>
+    <div class="job-card featured reveal">
+      <span class="job-badge future-badge">⭐ ASIR + Ciberseg.</span>
+      <div class="job-title">Analista de Ciberseguretat</div>
+      <div class="job-desc">Detecció, anàlisi i resposta davant amenaces i incidents de seguretat informàtica. Molt alta demanda i molt bon sou al mercat actual.</div>
+      <span class="job-arrow">↗</span>
+    </div>
+    <div class="job-card featured reveal">
+      <span class="job-badge future-badge">ASIR</span>
+      <div class="job-title">Administrador de Sistemes</div>
+      <div class="job-desc">Gestió i administració de servidors, infraestructura cloud i sistemes crítics de tota l'organització.</div>
+      <span class="job-arrow">↗</span>
+    </div>
+    <div class="job-card featured reveal">
+      <span class="job-badge future-badge">Especialització</span>
+      <div class="job-title">Perit Informàtic</div>
+      <div class="job-desc">Anàlisi forense digital i elaboració d'informes pericials per a procediments judicials. El punt on tecnologia i justícia es fusionen.</div>
+      <span class="job-arrow">↗</span>
+    </div>
+    <div class="job-card featured reveal">
+      <span class="job-badge future-badge">Sector públic</span>
+      <div class="job-title">Tècnic en Seguretat Digital (Forces de Seguretat)</div>
+      <div class="job-desc">Unitats especialitzades en delictes tecnològics dels Mossos d'Esquadra, Policia Nacional o Guàrdia Civil. Tecnologia i justícia de la mà.</div>
+      <span class="job-arrow">↗</span>
+    </div>
+  </div>
+</section>
+
+<section id="pla">
+  <div class="section-label">Pla — Full de ruta a 5 anys</div>
+  <h2 class="reveal">D'aquí a<br>5 anys</h2>
+  <p class="reveal" style="color:var(--text2);font-size:1rem;max-width:500px;margin-top:0.75rem;line-height:1.7;">Una ruta clara i realista des del Grau Mitjà fins a un perfil professional competitiu en el sector de la ciberseguretat.</p>
+
+  <div class="timeline reveal">
+    <div class="tl-item active">
+      <div class="tl-dot">ANY 1</div>
+      <div class="tl-label">Ara</div>
+      <div class="tl-title">Acabar CFGM SMX</div>
+      <div class="tl-sub">Bon expedient. Pràctiques a empresa. Primers projectes propis.</div>
+    </div>
+    <div class="tl-item near">
+      <div class="tl-dot">ANY 2</div>
+      <div class="tl-label">Proper pas</div>
+      <div class="tl-title">ASIR — 1r any</div>
+      <div class="tl-sub">Inici del Grau Superior. Servidors i xarxes avançades.</div>
+    </div>
+    <div class="tl-item near">
+      <div class="tl-dot">ANY 3</div>
+      <div class="tl-label">Mig termini</div>
+      <div class="tl-title">ASIR — 2n any + FCT</div>
+      <div class="tl-sub">Pràctiques en empresa real. Primera experiència professional.</div>
+    </div>
+    <div class="tl-item far">
+      <div class="tl-dot">ANY 4</div>
+      <div class="tl-label">Objectiu</div>
+      <div class="tl-title">Especialització Ciber</div>
+      <div class="tl-sub">Curs de ciberseguretat. Certificacions: CompTIA Security+, CEH...</div>
+    </div>
+    <div class="tl-item far">
+      <div class="tl-dot">ANY 5</div>
+      <div class="tl-label">Meta</div>
+      <div class="tl-title">Perfil professional sènior</div>
+      <div class="tl-sub">Feina consolidada en ciberseguretat o sistemes amb responsabilitat real.</div>
+    </div>
+  </div>
+</section>
+
+<section id="motivacio">
+  <div class="motivacio-inner">
+    <div class="section-label" style="justify-content:center;">La meva missió</div>
+    <p class="big-statement reveal">
+      Vull ser un professional de la informàtica capaç de gestionar sistemes, resoldre problemes i treballar en entorns organitzats. La meva meta és evolucionar cap a un perfil amb <em>responsabilitat real</em>, sobretot on <em>tecnologia i justícia</em> es troben.
+    </p>
+    <p class="motivacio-sub reveal">Perquè la ciberseguretat no és només tècnica — és protegir persones, organitzacions i dades en un món cada cop més digital. I jo vull ser-hi.</p>
+    <div style="margin-top:2.5rem;" class="reveal">
+      <a href="#autoconocimiento" class="btn-primary">Explorar el meu perfil complet</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">SMX<span>.</span>portfolio</div>
+  <div class="footer-copy">Projecte d'orientació professional · Cicle Formatiu SMX</div>
+  <div class="footer-links">
+    <a href="#hero">Inici</a><a href="#autoconocimiento">Perfil</a><a href="#pla">Pla</a>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+function animateCursor(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateCursor);}
+animateCursor();
+document.querySelectorAll('a,button,.job-card,.skill-card,.path-item,.objetivo-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.classList.add('hover');ring.classList.add('hover');});
+  el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover');});
+});
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);});
+
+const skills=[
+  {name:'Habilitats comunicatives',importance:3,level:3},
+  {name:'Responsabilitat',importance:3,level:3},
+  {name:'Resiliència',importance:3,level:3},
+  {name:'Constància',importance:3,level:3},
+  {name:'Disciplina',importance:3,level:3},
+  {name:'Flexibilitat i adaptació',importance:3,level:3},
+  {name:'Organització i planificació',importance:3,level:3},
+  {name:'Observació i anàlisi',importance:3,level:3},
+  {name:'Iniciativa',importance:3,level:3},
+  {name:'Treball en equip',importance:3,level:3},
+  {name:'Empatia',importance:2,level:3},
+  {name:'Creativitat i innovació',importance:2,level:3},
+  {name:'Lideratge',importance:2,level:3},
+  {name:'Tolerància',importance:2,level:3},
+  {name:'Intel·ligència emocional',importance:2,level:2},
+  {name:'Sentit crític i autocrític',importance:3,level:2},
+  {name:'Asertivitat',importance:2,level:2},
+  {name:'Resolució de conflictes',importance:2,level:2},
+];
+const grid=document.getElementById('skillsGrid');
+skills.forEach(s=>{
+  const pct=Math.round((s.level/3)*100);
+  const isLow=s.level<s.importance;
+  const card=document.createElement('div');
+  card.className='skill-card reveal';
+  card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.75rem;"><div class="skill-name">${s.name}</div><div class="skill-score">${s.level}<span style="font-size:0.65rem;color:var(--text3);font-weight:400;">/3</span></div></div><div class="skill-bar-track"><div class="skill-bar-fill ${isLow?'low':''}" data-pct="${pct}"></div></div><div style="display:flex;justify-content:space-between;margin-top:0.5rem;"><span style="font-size:0.65rem;color:var(--text3);">Importància: ${s.importance}/3</span><span style="font-size:0.65rem;color:${isLow?'var(--accent3)':'var(--accent)'};">${isLow?'A millorar':'Alineat'}</span></div>`;
+  grid.appendChild(card);
+});
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      entry.target.querySelectorAll('.skill-bar-fill').forEach(bar=>{bar.style.width=bar.dataset.pct+'%';});
+      if(entry.target.classList.contains('path-container')){document.getElementById('pathLine').classList.add('filled');}
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.addEventListener('mousemove',e=>{
+  const glow=document.querySelector('.hero-glow');
+  if(!glow)return;
+  const x=(e.clientX/window.innerWidth)*60-30;
+  const y=(e.clientY/window.innerHeight)*60-30;
+  glow.style.transform=`translate(${x}px,${y}px)`;
+});
+</script>
+</body>
+</html>
